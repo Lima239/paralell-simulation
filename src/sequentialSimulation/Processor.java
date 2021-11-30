@@ -3,7 +3,7 @@ package sequentialSimulation;
 import java.util.*;
 
 public class Processor {
-    private boolean idle = false;
+    private boolean idle;
     private double timeCounter;
     private final int latency;
     private ArrayList<Double> listOfTasks;
@@ -14,6 +14,7 @@ public class Processor {
     private Iterator<ArrayList<Double>> iteratorOfJobs;
 
     public Processor(int latency){
+        this.idle = false;
         this.timeCounter = 0;
         this.latency = latency;
         this.listOfTasks = new ArrayList<>();
@@ -23,7 +24,6 @@ public class Processor {
         this.iteratorOfTasks =  listOfTasks.iterator();
         this.iteratorOfJobs = listOfJobs.iterator();
     }
-
 
     public void reset(){
         this.listOfTasks.clear();
@@ -40,7 +40,8 @@ public class Processor {
         if(iteratorOfTasks.hasNext()){
             double nextTask = iteratorOfTasks.next();
             historyOfTasks.add(nextTask);
-            return timeCounter + latency + nextTask;
+            timeCounter += latency + nextTask;
+            return timeCounter;
         } else if(iteratorOfJobs.hasNext()){
             this.historyOfJobs.add(this.listOfTasks);
             this.historyOfTasks = new ArrayList<>();
@@ -48,7 +49,8 @@ public class Processor {
             if(iteratorOfTasks.hasNext()){
                 double nextTask = iteratorOfTasks.next();
                 historyOfTasks.add(nextTask);
-                return timeCounter + latency + nextTask;
+                timeCounter += latency + nextTask;
+                return timeCounter;
             } else {
                 throw new NoSuchElementException();
             }
@@ -57,8 +59,13 @@ public class Processor {
         }
     }
 
-    public void next_idle(){
-
+    public double next_idle(){
+        double result = 0;
+        try{ while(true){
+                result += execute();
+        }
+        } catch(NoSuchElementException e){}
+        return result;
     }
 
     public ArrayList HistoryOfTasks(){
