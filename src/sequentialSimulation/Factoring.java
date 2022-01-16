@@ -9,12 +9,14 @@ public class Factoring implements Algorithms{
     private int numberOfProcessors;
     private double latency;
     private ArrayList<Processor> processors;
+    private float factor;
 
-    public Factoring(ArrayList<Double> tasks, int numberOfProcessors, double latency){
+    public Factoring(ArrayList<Double> tasks, int numberOfProcessors, double latency, float factor){
         this.tasks = tasks;
         this.numberOfProcessors = numberOfProcessors;
         this.latency = latency;
         this.iteratorOfTasks =  tasks.iterator();
+        this.factor = factor;
 
         processors = new ArrayList<>();
         for (int i = 1; i < numberOfProcessors; i++){
