@@ -6,7 +6,7 @@ import java.io.*;
 public class InputReader {
     private Scanner scannerTerminal;
     private Scanner scannerFile;
-    private List<Double> tasks;
+    private ArrayList<Double> tasks;
     private PrintStream out;
     private Random gaussianNumber;
     private int countOfNumbers;
@@ -16,28 +16,35 @@ public class InputReader {
         this.tasks = new ArrayList();
     }
 
-    public InputReader(int countOfNumbers) throws FileNotFoundException {
+    public InputReader(int countOfNumbers) {
         this.countOfNumbers = countOfNumbers;
-        this.out = new PrintStream("gaussianNumbers.txt");
+        this.tasks = new ArrayList();
+        try {
+            this.out = new PrintStream("gaussianNumbers.txt");
+        } catch (IOException e){}
         this.gaussianNumber = new Random();
         this.scannerFile = new Scanner("gaussianNumbers.txt");
     }
 
-    void readFromTerminal() {
+    public void readFromTerminal() {
         while (scannerTerminal.hasNext()) {
             tasks.add(scannerTerminal.nextDouble());
         }
     }
 
-    void generateGaussianNumbers() {
+    public void generateGaussianNumbers() {
         for (int i = 0; i < countOfNumbers; i++){
             out.print(gaussianNumber.nextGaussian() + " ");
         }
     }
 
-    void readFromFile() {
+    public void readFromFile() {
         while (scannerFile.hasNext()) {
             tasks.add(scannerFile.nextDouble());
         }
+    }
+
+    public ArrayList<Double> getTasks(){
+        return this.tasks;
     }
 }

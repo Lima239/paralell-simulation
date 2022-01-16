@@ -8,12 +8,15 @@ public class Chunking implements Algorithms{
     private int numberOfProcessors;
     private double latency;
     private ArrayList<Processor> processors;
+    private int numberOfTasks;
+
 
     public Chunking(ArrayList<Double> tasks, int numberOfProcessors, double latency){
         this.tasks = tasks;
         this.numberOfProcessors = numberOfProcessors;
         this.latency = latency;
         this.iteratorOfTasks =  tasks.iterator();
+        this.numberOfTasks = tasks.size();
 
         processors = new ArrayList<>();
         for (int i = 1; i < numberOfProcessors; i++){
