@@ -15,8 +15,6 @@ public class Processor {
         this.latency = latency;
         this.listOfTasks = new ArrayList<>();
         this.listOfJobs = new ArrayList<>();
-        this.iteratorOfTasks =  listOfTasks.iterator();
-        this.iteratorOfJobs = listOfJobs.iterator();
     }
 
     public void reset(){
@@ -25,8 +23,9 @@ public class Processor {
     }
 
     public void read_job(ArrayList<Double> listOfTasks){
-        timeCounter += latency;
+        if (listOfJobs.size() == 0) iteratorOfTasks =  listOfTasks.iterator();
         listOfJobs.add(listOfTasks);
+        iteratorOfJobs = listOfJobs.iterator();
     }
 
     public double execute(){
@@ -36,24 +35,21 @@ public class Processor {
             return timeCounter;
         } else if(iteratorOfJobs.hasNext()){
             this.listOfTasks = new ArrayList<>(iteratorOfJobs.next());
-            if(iteratorOfTasks.hasNext()){
+            iteratorOfTasks =  listOfTasks.iterator();
+            if(iteratorOfTasks.hasNext()) {
                 double nextTask = iteratorOfTasks.next();
                 timeCounter += latency + nextTask;
                 return timeCounter;
-            } else {
-                throw new NoSuchElementException();
             }
-        } else {
-            throw new NoSuchElementException();
         }
+        return 0;
     }
 
     public double next_idle(){
-        double result = 0;
-        try{ while(true){
-                result += execute();
+        double result = timeCounter;
+        while(execute() != 0) {
+            result += execute();
         }
-        } catch(NoSuchElementException e){}
         return result;
     }
 }
