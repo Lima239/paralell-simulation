@@ -3,18 +3,21 @@ package sequentialSimulation;
 import java.util.*;
 
 public class Processor {
-    private double timeCounter;
     private final double latency;
     private ArrayList<Double> listOfTasks;
     private ArrayList<ArrayList<Double>> listOfJobs;
     private Iterator<Double> iteratorOfTasks;
-    private Iterator<ArrayList<Double>> iteratorOfJobs;
+    private JobsIterator iterableOfJobs;
+    private Iterator iteratorOfJobs;
+
 
     public Processor(double latency){
-        this.timeCounter = 0;
         this.latency = latency;
         this.listOfTasks = new ArrayList<>();
         this.listOfJobs = new ArrayList<>();
+        iteratorOfTasks = listOfTasks.iterator();
+        iterableOfJobs = new JobsIterator(listOfJobs);
+        iteratorOfJobs = iterableOfJobs.iterator();
     }
 
     public void reset(){
@@ -23,33 +26,49 @@ public class Processor {
     }
 
     public void read_job(ArrayList<Double> listOfTasks){
-        if (listOfJobs.size() == 0) iteratorOfTasks =  listOfTasks.iterator();
-        listOfJobs.add(listOfTasks);
-        iteratorOfJobs = listOfJobs.iterator();
+        iterableOfJobs.addJob(listOfTasks);
     }
 
-    public double execute(){
+    public double simulateJob(ArrayList<Double> job){
+        Iterator<Double> simulateIterator = job.iterator();
+        double counter = latency;
+
+        while(simulateIterator.hasNext()){
+            counter += simulateIterator.next();
+        }
+
+        return counter;
+    }
+
+    public double executeTask(){
+        double counter = 0;
         if(iteratorOfTasks.hasNext()){
             double nextTask = iteratorOfTasks.next();
-            timeCounter += nextTask;
-            return timeCounter;
+            counter += nextTask;
         } else if(iteratorOfJobs.hasNext()){
-            this.listOfTasks = new ArrayList<>(iteratorOfJobs.next());
+            this.listOfTasks = new ArrayList<>();
+            listOfTasks.addAll((Collection<? extends Double>) iteratorOfJobs.next());
             iteratorOfTasks =  listOfTasks.iterator();
             if(iteratorOfTasks.hasNext()) {
                 double nextTask = iteratorOfTasks.next();
-                timeCounter += latency + nextTask;
-                return timeCounter;
+                counter += latency;
+                counter += nextTask;
             }
         }
-        return 0;
+        return counter;
     }
 
-    public double next_idle(){
-        double result = timeCounter;
-        while(execute() != 0) {
-            result += execute();
+    public boolean hasNext(){
+        return iteratorOfJobs.hasNext() || iteratorOfTasks.hasNext();
+    }
+
+    public double executeJob(){
+        double timeCounter = 0;
+        double resultTime = executeTask();
+        while(resultTime != 0) {
+            timeCounter += resultTime;
+            resultTime = executeTask();
         }
-        return result;
+        return timeCounter;
     }
 }
