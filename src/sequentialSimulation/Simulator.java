@@ -1,37 +1,27 @@
 package sequentialSimulation;
 
 import java.util.*;
+import java.io.*;
 
 public class Simulator {
-    public static void main(String[] args) {
-        System.out.println("Do you want to enter a sequence of tasks? yes/no");
-        Scanner scanner = new Scanner(System.in);
-        InputReader inputReader;
-
-        if (scanner.next() == "yes"){
-            System.out.println("Please enter a sequence of tasks.");
-            inputReader = new InputReader();
-            inputReader.readFromTerminal();
-        } else {
-            System.out.println("The simulator will generate a sequence of tasks, please enter number of tasks.");
-            inputReader = new InputReader(scanner.nextInt());
-            inputReader.generateGaussianNumbers();
-        }
-
-        System.out.println("Please enter the name of the algorithm you want the simulator to simulate, " +
-                "number of processors and latency.");
-        String nameOfAlgorithm = scanner.next();
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(new FileInputStream("input.txt"));
         int numberOfProcessors = scanner.nextInt();
-        int latency = scanner.nextInt();
-        Algorithms algorithm;
-
-        switch (nameOfAlgorithm){
-            case "Chunking" : algorithm = new Chunking(inputReader.getTasks(), numberOfProcessors, latency);
-            case "Factoring" :
-                int factor = scanner.nextInt();
-                algorithm = new Factoring(inputReader.getTasks(), numberOfProcessors, latency, factor);
-            case "Work stealing" : algorithm = new WorkStealing(inputReader.getTasks(), numberOfProcessors, latency);
+        Double latency = scanner.nextDouble();
+        int parameter = scanner.nextInt();
+        float factor = scanner.nextFloat();
+        ArrayList<Double> tasks = new ArrayList<>();
+        while (scanner.hasNext()){
+            tasks.add(scanner.nextDouble());
         }
+
+        Algorithms chunking = new Chunking(tasks, numberOfProcessors, latency, parameter);
+        Algorithms workStealing = new WorkStealing(tasks, numberOfProcessors, latency);
+        Algorithms factoring = new Factoring(tasks, numberOfProcessors, latency, factor);
+
+        System.out.println("Chunking: " + chunking.redistributeTasks());
+        System.out.println("Work stealing: " + workStealing.redistributeTasks());
+        System.out.println("Factoring: " + factoring.redistributeTasks());
 
     }
 }
