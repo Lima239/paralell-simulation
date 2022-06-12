@@ -62,7 +62,10 @@ public class WorkStealing implements Algorithms{
                 if (rest > 0){
                     end = begin + numberOfTasksPerOne + 1;
                     rest--;
-                } else{ end = begin + numberOfTasksPerOne;}
+                } else{
+                    if (rest == 0 && numberOfTasksPerOne == 0) break;
+                    end = begin + numberOfTasksPerOne;
+                }
 
                 ArrayList<Double> tasksPerOne = new ArrayList<>();
                 tasksPerOne.addAll(tasks.subList(begin, end));
@@ -88,6 +91,7 @@ public class WorkStealing implements Algorithms{
 
                 if(!p.equals(minProcessor)){
                     int index = begins.get(i);
+                    if (index >= tasks.size()) break;
                     while(p.simulateJob(tasksPerOne) < minValue){
                         tasksPerOne.add(tasks.get(index));
                         index++;
@@ -103,6 +107,7 @@ public class WorkStealing implements Algorithms{
             this.tasks = unprocessedTasks;
             numberOfTasks = tasks.size();
         }
+
 
         return findMax(map);
     }

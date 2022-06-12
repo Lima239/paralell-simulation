@@ -6,22 +6,29 @@ import java.io.*;
 public class Simulator {
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(new FileInputStream("input.txt"));
-        int numberOfProcessors = scanner.nextInt();
-        Double latency = scanner.nextDouble();
-        int parameter = scanner.nextInt();
-        float factor = scanner.nextFloat();
+        PrintStream out = new PrintStream("output.txt");
+        double latency = 0.3;
+        int parameter = 1;
+        float min = scanner.nextFloat();
+        float max = scanner.nextFloat();
         ArrayList<Double> tasks = new ArrayList<>();
         while (scanner.hasNext()){
             tasks.add(scanner.nextDouble());
         }
 
-        Algorithms chunking = new Chunking(tasks, numberOfProcessors, latency, parameter);
-        Algorithms workStealing = new WorkStealing(tasks, numberOfProcessors, latency);
-        Algorithms factoring = new Factoring(tasks, numberOfProcessors, latency, factor);
+        for (int i = 1; i <= 100; i++){
+            Algorithms chunking = new Chunking(tasks, i, latency, parameter);
+            Algorithms workStealing = new WorkStealing(tasks, i, latency);
+            float factor = 1 + (max / min) * (i - 1);
+            Algorithms factoring = new Factoring(tasks, i, latency, factor);
 
-        System.out.println("Chunking: " + chunking.redistributeTasks());
-        System.out.println("Work stealing: " + workStealing.redistributeTasks());
-        System.out.println("Factoring: " + factoring.redistributeTasks());
+            out.print(i + " ");
+            out.print(chunking.redistributeTasks() + " ");
+            out.print(workStealing.redistributeTasks() + " ");
+            out.print(factoring.redistributeTasks() + " ");
+            out.println();
+        }
 
+        out.close();
     }
 }

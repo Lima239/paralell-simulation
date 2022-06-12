@@ -68,20 +68,21 @@ public class Factoring implements Algorithms{
             K = Math.max((int) Math.floor(numberOfTasks / factor), 1);
             counter = 0;
             while (counter < numberOfProcessors) {
-                if(iteratorOfTasks.hasNext()) {
-                    counter++;
-                    ArrayList<Double> listOfKTasks = new ArrayList<>();
-                    for (int i = 0; i < K; i++){
+                counter++;
+                ArrayList<Double> listOfKTasks = new ArrayList<>();
+                for (int i = 0; i < K; i++){
+                    if(iteratorOfTasks.hasNext()) {
                         listOfKTasks.add(iteratorOfTasks.next());
                         numberOfTasks--;
+                    } else {
+                        break;
                     }
-                    Processor p = findMin(map);
-                    Double value = map.get(p);
-                    p.read_job(listOfKTasks);
-                    map.put(p, value + p.executeJob());
-                } else {
-                    break;
                 }
+                Processor p = findMin(map);
+                Double value = map.get(p);
+                p.read_job(listOfKTasks);
+                map.put(p, value + p.executeJob());
+
             }
         }
 
