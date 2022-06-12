@@ -21,13 +21,13 @@ def gen(t_min, t_max, target_avg, n, tolerance=0.000001):
             l_new = np.random.default_rng().uniform(avg, target_avg + diff, n - 2 - len(l))
         l = np.concatenate((l, l_new))
 
-MIN = 0.08
-MAX = 0.16
-AVG = 0.1
-N = 10000
-FILENAME = '/Users/JuliaLichmanova/Desktop/paralell-simulation/input6.txt'
+MIN = 7
+MAX = 14
+AVG = 10
+W = 100
+FILENAME = '/Users/JuliaLichmanova/Desktop/paralell-simulation/input.txt'
 
-result = gen(MIN, MAX, AVG, N)
+result = gen(MIN, MAX, AVG, W)
 
 print('Generated result with min: {0}, max: {1}, avg: {2} and length: {3}'.format(np.min(result), np.max(result), np.average(result), len(result)))
 
