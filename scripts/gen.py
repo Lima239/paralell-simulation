@@ -25,7 +25,7 @@ MIN = 0.08
 MAX = 0.16
 AVG = 0.1
 N = 10000
-FILENAME = '/Users/KlaudiaLichmanova/Desktop/paralell-simulation/input6.txt'
+FILENAME = '/Users/JuliaLichmanova/Desktop/paralell-simulation/input6.txt'
 
 result = gen(MIN, MAX, AVG, N)
 
